@@ -1,0 +1,12 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Pr0Fav:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Pr0Fav_jar</output-path>
+    <root id="archive" name="Pr0Fav.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="module-output" name="Pr0Fav" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/json-20180813.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
