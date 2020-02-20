@@ -51,7 +51,7 @@ public class CSVManager {
                 itemBuilder.append(item.isAudio() + ",");
                 itemBuilder.append(item.getSource() + ",");
                 itemBuilder.append(item.getFlags() + ",");
-                itemBuilder.append(item.getDeleted() + ",");
+                itemBuilder.append(item.getGift() + ",");
                 itemBuilder.append(item.getUser() + ",");
                 itemBuilder.append(item.getMark() + ",");
                 itemBuilder.append(item.isVideo() + ",");

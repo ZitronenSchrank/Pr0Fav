@@ -102,7 +102,7 @@ public class ProApi {
                     this.writeStatus("Es wurden " + favList.size() + " Uploads gefunden...");
                 }
             } catch (JSONException je) {
-
+                System.out.println(je);
             }
 
         } catch (MalformedURLException e) {
@@ -341,11 +341,11 @@ public class ProApi {
         boolean audio = object.getBoolean("audio");
         String source = object.getString("source");
         int flags = object.getInt("flags");
-        int deleted = object.getInt("deleted");
+        int gift = object.getInt("gift");
         String user = object.getString("user");
         int mark = object.getInt("mark");
 
-        return new ProItem(id, promoted, up, down, created, image, thumb, fullsize, width, height, audio, source, flags, deleted, user, mark);
+        return new ProItem(id, promoted, up, down, created, image, thumb, fullsize, width, height, audio, source, flags, user, mark, gift);
     }
 
     /**
@@ -427,14 +427,14 @@ public class ProApi {
         private boolean audio;
         private String source;
         private int flags;
-        private int deleted;
+        private int gift;
         private String user;
         private int mark;
 
         private boolean isVideo = false;
         private String urlToFile = "";
 
-        public ProItem(int id, int promoted, int up, int down, int created, String image, String thumb, String fullsize, int width, int height, boolean audio, String source, int flags, int deleted, String user, int mark) {
+        public ProItem(int id, int promoted, int up, int down, int created, String image, String thumb, String fullsize, int width, int height, boolean audio, String source, int flags, String user, int mark, int gift) {
             this.id = id;
             this.promoted = promoted;
             this.up = up;
@@ -448,8 +448,8 @@ public class ProApi {
             this.audio = audio;
             this.source = source.replaceAll("([,])", "");
             this.flags = flags;
-            this.deleted = deleted;
-            this.user = user.replaceAll("([,])", "");;
+            this.gift = gift;
+            this.user = user.replaceAll("([,])", "");
             this.mark = mark;
 
             if (this.image.toLowerCase().contains(".mp4") || this.image.toLowerCase().contains(".webm")) {
@@ -520,8 +520,8 @@ public class ProApi {
             return flags;
         }
 
-        public int getDeleted() {
-            return deleted;
+        public int getGift() {
+            return gift;
         }
 
         public String getUser() {
