@@ -214,6 +214,7 @@ public class Window extends JFrame implements ActionListener{
                 this.pack();
 
                 laStatus.setText("Hallo " + tfName.getText() +".");
+                api.writeCookieFile();
             } else {
                 if(result.getBan().equals("null")){
                     laStatus.setText("Es ist ein Fehler aufgetreten. Falsches Passwort?");

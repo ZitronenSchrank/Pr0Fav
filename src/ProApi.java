@@ -363,6 +363,41 @@ public class ProApi {
         }
     }
 
+    private String readCookieFile() {
+        File f = new File(System.getProperty("user.home")+File.separator+ "ProFav"+File.separator+"ProFav.cookie");
+        StringBuilder cookies = new StringBuilder();
+        if(f.isFile()){
+            try {
+                BufferedReader br = new BufferedReader(new FileReader(f));
+                String line;
+                while ((line = br.readLine()) != null) {
+                    cookies.append(line);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return cookies.toString();
+    }
+
+    public void writeCookieFile() {
+        if (cookieManager.getCookieStore().getCookies().size() > 0) {
+            String cookies = cookiesToString();
+            try {
+
+                File f = new File(System.getProperty("user.home")+File.separator+ "ProFav"+File.separator);
+                if(!f.isDirectory()) f.mkdirs();
+
+                PrintWriter writer = new PrintWriter(new File(System.getProperty("user.home")+File.separator+ "ProFav"+File.separator+"ProFav.cookie"), "UTF-8");
+                writer.println(cookies);
+                writer.flush();
+                writer.close();
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     /**
      * Sendet die Cookies vom CookieManager mit dem HTTP Request mit.
      *
@@ -371,6 +406,9 @@ public class ProApi {
     private void getCookies(HttpsURLConnection con) {
         if (cookieManager.getCookieStore().getCookies().size() > 0) {
             String cookies = cookiesToString();
+            con.setRequestProperty("Cookie", cookies);
+        } else {
+            String cookies = readCookieFile();
             con.setRequestProperty("Cookie", cookies);
         }
     }
