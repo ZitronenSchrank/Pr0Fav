@@ -44,17 +44,17 @@ public class ProApi {
 
     /**
      * Sammelt alle Favoriten oder Uploads eines Users.
-     * @param fav Wenn true, werden die Favoriten von name runtergeladen. Bei False nur dessen Uploads.
+     * @param collection Welche Colletion runtergeladen werden soll. Leerer String Hochlads der Person.
      * @param name Der User wessen Favoriten oder Uploads runtergeladen werden sollen.
      * @param flag Aus welchen Kategorien die Favoriten kommen sollen.
      * @return Gibt eine ArrayList mit allen Favoriten zurück.
      */
-    public Vector<ProItem> getItemList(boolean fav, String name, int flag) {
+    public Vector<ProItem> getItemList(String collection, String name, int flag) {
         Vector<ProItem> favList = new Vector<ProItem>();
-        String listType = fav ? "likes" : "user";
+        String favString = !collection.equals("") ? "&collection=" + collection : "";
         try {
             // Holt die ersten 120 Favoriten
-            String s = sendGet(new URL(PRO_ITEM_GET + "?flags=" + flag + "&" + listType + "=" + name + ""));
+            String s = sendGet(new URL(PRO_ITEM_GET + "?flags=" + flag + "&" + "user" + "=" + name + favString));
 
             // Erstellt die Liste in der die Favoriten gespeichert werden sollen.
             favList = new Vector<ProItem>();
@@ -81,7 +81,7 @@ public class ProApi {
                     }
 
                     // Hole die nächsten 120 Favoriten.
-                    s = sendGet(new URL(PRO_ITEM_GET + "?older=" + favList.get(favList.size() - 1).id + "&flags=" + flag + "&" + listType + "=" + name + ""));
+                    s = sendGet(new URL(PRO_ITEM_GET + "?older=" + favList.get(favList.size() - 1).id + "&flags=" + flag + "&" + "user" + "=" + name + favString));
                     obj = new JSONObject(s);
 
                     try {
