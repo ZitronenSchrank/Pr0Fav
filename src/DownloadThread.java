@@ -1,5 +1,4 @@
 import javax.swing.*;
-import java.util.ArrayList;
 import java.util.Vector;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -38,5 +37,6 @@ public class DownloadThread extends Thread {
             }
         }
         btDownload.setEnabled(true);
+        laStatus.setText("Download abgeschlossen.");
     }
 }
