@@ -25,14 +25,14 @@ public class JPlaceHolderTextField extends JTextField implements FocusListener {
         placeholder = s;
         if(isEmpty){
             this.setForeground(Color.GRAY);
-            this.setText(placeholder);;
+            super.setText(placeholder);;
         }
     }
 
     @Override
     public void focusGained(FocusEvent e) {
         if (isEmpty) {
-            this.setText("");
+            super.setText("");
             this.setForeground(Color.BLACK);
             isEmpty = false;
         }
@@ -42,7 +42,7 @@ public class JPlaceHolderTextField extends JTextField implements FocusListener {
     public void focusLost(FocusEvent e) {
         if (this.getText().isEmpty()) {
             this.setForeground(Color.GRAY);
-            this.setText(placeholder);
+            super.setText(placeholder);
             isEmpty = true;
         }
     }
@@ -57,5 +57,9 @@ public class JPlaceHolderTextField extends JTextField implements FocusListener {
 
     }
 
-
+    @Override
+    public void setText(String t) {
+        isEmpty = false;
+        super.setText(t);
+    }
 }

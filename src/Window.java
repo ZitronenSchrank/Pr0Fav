@@ -189,12 +189,23 @@ public class Window extends JFrame implements ActionListener{
 
         api = new ProApi(laStatus);
 
-        getCaptcha();
+
 
         this.setPreferredSize(new Dimension(650, 400));
         this.add(mainPanel);
 
-        this.pack();
+
+
+        // Check if a valid cookie file exists, use it if true
+        String userName = api.checkIfValidCookie();
+        if(userName != null && !userName.isEmpty()){
+            tfName.setText(userName);
+            updateAfterLogin();
+        } else {
+            getCaptcha();
+            this.pack();
+        }
+
         this.setVisible(true);
 
         btLogin.addActionListener(this);
@@ -212,33 +223,39 @@ public class Window extends JFrame implements ActionListener{
         btOtherCollection.addActionListener(this);
     }
 
+    private void updateAfterLogin(){
+        loggedIn = true;
+
+        tfName.setEnabled(false);
+        tfPassword.setEnabled(false);
+        tfCaptcha.setEnabled(false);
+        btLogin.setEnabled(false);
+
+        btOwnFav.setEnabled(true);
+        btOtherFav.setEnabled(true);
+        btOwnPost.setEnabled(true);
+        btOtherPost.setEnabled(true);
+        btOtherCollection.setEnabled(true);
+        btOwnCollection.setEnabled(true);
+
+        northPanel.remove(captchaImage);
+        mainPanel.add(spResponse, BorderLayout.CENTER);
+
+        this.pack();
+        laStatus.setText("Hallo " + tfName.getText() +".");
+
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == btLogin){
-            //taResponse.append(api.getItemInfo(3198555));
+
             String pass = new String(tfPassword.getPassword());
             ProApi.LoginResult result = api.login(tfName.getText(), pass, tfCaptcha.getText(), captchaToken);
             if(result.isSuccess()){
-                loggedIn = true;
+                updateAfterLogin();
+                api.writeCookieFile();
 
-                tfName.setEnabled(false);
-                tfPassword.setEnabled(false);
-                tfCaptcha.setEnabled(false);
-                btLogin.setEnabled(false);
-
-                btOwnFav.setEnabled(true);
-                btOtherFav.setEnabled(true);
-                btOwnPost.setEnabled(true);
-                btOtherPost.setEnabled(true);
-                btOtherCollection.setEnabled(true);
-                btOwnCollection.setEnabled(true);
-
-                northPanel.remove(captchaImage);
-                mainPanel.add(spResponse, BorderLayout.CENTER);
-                this.pack();
-
-                laStatus.setText("Hallo " + tfName.getText() +".");
-                //api.writeCookieFile();
             } else {
                 if(result.getBan().equals("null")){
                     laStatus.setText("Es ist ein Fehler aufgetreten. Falsches Passwort?");

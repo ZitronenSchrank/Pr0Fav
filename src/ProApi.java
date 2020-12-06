@@ -1,6 +1,4 @@
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.json.*;
 
 import javax.imageio.ImageIO;
 import javax.net.ssl.HttpsURLConnection;
@@ -8,10 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.CookieManager;
-import java.net.HttpCookie;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.List;
 
@@ -28,12 +24,17 @@ public class ProApi {
 
     private final String COOKIES_HEADER = "Set-Cookie";
     private final String PRO_LOGIN = PRO_URL + "/api/user/login";
+    private final String PRO_USER_INFO = PRO_URL + "/api/user/info";
     private final String PRO_LOGOUT = PRO_URL + "/api/user/logout";
     private final String PRO_ITEM_GET = PRO_URL + "/api/items/get";
     private final String PRO_ITEM_INFO = PRO_URL + "/api/items/info?itemId=";
 
+    private final String PRO_COOKIE_PATH = System.getProperty("user.home")+File.separator+ "ProFav"+File.separator;
+    private final String PRO_COOKIE_FILE_NAME = PRO_COOKIE_PATH+"ProFav.cookie";
+
     private CookieManager cookieManager;
     private String userName = "";
+    private boolean isCookieValid = false;
 
     private JLabel statusLabel;
 
@@ -108,7 +109,46 @@ public class ProApi {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
+        this.writeCookieFile();
         return favList;
+    }
+
+
+    public String checkIfValidCookie() {
+        String cookieContent = this.readCookieFile();
+        if(cookieContent != null) {
+            String splitContent[] = cookieContent.split(";");
+
+            int index = 0;
+            boolean found = false;
+            for(index = 0; index < splitContent.length; index++){
+                if(splitContent[index].contains("me=%")) {
+                    found = true;
+                    break;
+                }
+            }
+
+            if(found){
+                try {
+                    JSONObject userInfo = new JSONObject(URLDecoder.decode(splitContent[index].replace(';',' ').substring(3), StandardCharsets.UTF_8.name()));
+                    String name = userInfo.getString("n");
+                    isCookieValid = true;
+
+                    String s = sendGet(new URL(PRO_USER_INFO));
+
+                    JSONObject res = new JSONObject(s);
+
+                    res.getJSONObject("account");
+
+                    return name;
+                } catch (Exception ex) {
+                    isCookieValid = false;
+                    cookieManager.getCookieStore().removeAll();
+                    ex.printStackTrace();
+                }
+            }
+        }
+        return null;
     }
 
     /**
@@ -364,7 +404,7 @@ public class ProApi {
     }
 
     private String readCookieFile() {
-        File f = new File(System.getProperty("user.home")+File.separator+ "ProFav"+File.separator+"ProFav.cookie");
+        File f = new File(PRO_COOKIE_FILE_NAME);
         StringBuilder cookies = new StringBuilder();
         if(f.isFile()){
             try {
@@ -375,7 +415,11 @@ public class ProApi {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                return null;
             }
+        }
+        else {
+            return null;
         }
         return cookies.toString();
     }
@@ -385,10 +429,10 @@ public class ProApi {
             String cookies = cookiesToString();
             try {
 
-                File f = new File(System.getProperty("user.home")+File.separator+ "ProFav"+File.separator);
+                File f = new File(PRO_COOKIE_PATH);
                 if(!f.isDirectory()) f.mkdirs();
 
-                PrintWriter writer = new PrintWriter(new File(System.getProperty("user.home")+File.separator+ "ProFav"+File.separator+"ProFav.cookie"), "UTF-8");
+                PrintWriter writer = new PrintWriter(new File(PRO_COOKIE_FILE_NAME), "UTF-8");
                 writer.println(cookies);
                 writer.flush();
                 writer.close();
@@ -404,7 +448,7 @@ public class ProApi {
      * @param con Die Connection mit dem Request.
      */
     private void getCookies(HttpsURLConnection con) {
-        if (cookieManager.getCookieStore().getCookies().size() > 0) {
+        if (!isCookieValid) {
             String cookies = cookiesToString();
             con.setRequestProperty("Cookie", cookies);
         } else {
