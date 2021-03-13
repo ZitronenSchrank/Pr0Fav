@@ -21,14 +21,14 @@ dependencies {
     testImplementation 'junit:junit:4.13'
 
     // This dependency is used by the application.
-    implementation 'com.google.guava:guava:29.0-jre'
+    // implementation 'com.google.guava:guava:29.0-jre'
 
     // https://mvnrepository.com/artifact/org.json/json
     implementation group: 'org.json', name: 'json', version: '20210307'
 
 }
 
-version = "2020-12"
+version = "2021-03"
 
 application {
     // Define the main class for the application.
