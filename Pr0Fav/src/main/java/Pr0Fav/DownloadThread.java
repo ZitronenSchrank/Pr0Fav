@@ -1,3 +1,5 @@
+package Pr0Fav;
+
 import javax.swing.*;
 import java.util.Vector;
 import java.util.concurrent.ThreadLocalRandom;

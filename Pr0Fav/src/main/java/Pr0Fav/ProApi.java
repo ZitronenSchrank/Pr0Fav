@@ -1,3 +1,5 @@
+package Pr0Fav;
+
 import org.json.*;
 
 import javax.imageio.ImageIO;

@@ -1,18 +1,20 @@
+package Pr0Fav;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
-public class JPlaceHolderPassword extends JPasswordField implements FocusListener {
+public class JPlaceHolderTextField extends JTextField implements FocusListener {
+
     private String placeholder;
     private boolean isEmpty = true;
-    private char echoChar = '░';
 
-    JPlaceHolderPassword() {
+    public JPlaceHolderTextField() {
         super.addFocusListener(this);
     }
 
-    public JPlaceHolderPassword(final String pText) {
+    public JPlaceHolderTextField(final String pText) {
         super(pText);
         isEmpty = false;
     }
@@ -21,53 +23,45 @@ public class JPlaceHolderPassword extends JPasswordField implements FocusListene
         return placeholder;
     }
 
-    void setPlaceholder(final String s) {
+    public void setPlaceholder(final String s) {
         placeholder = s;
         if(isEmpty){
-            this.setEchoChar((char)0);
             this.setForeground(Color.GRAY);
-            this.setText(placeholder);
+            super.setText(placeholder);;
         }
     }
 
     @Override
     public void focusGained(FocusEvent e) {
         if (isEmpty) {
-            this.setText("");
+            super.setText("");
             this.setForeground(Color.BLACK);
-            this.setEchoChar(echoChar);
             isEmpty = false;
-
         }
     }
 
     @Override
     public void focusLost(FocusEvent e) {
-        if (this.getPassword().length == 0) {
+        if (this.getText().isEmpty()) {
             this.setForeground(Color.GRAY);
-            this.setText(placeholder);
-            echoChar = this.getEchoChar();
-            this.setEchoChar((char)0);
+            super.setText(placeholder);
             isEmpty = true;
         }
     }
 
     @Override
-    public char[] getPassword() {
+    public String getText() {
         if(isEmpty){
-            return new char[0];
+            return "";
         } else {
-            return super.getPassword();
+            return super.getText();
         }
+
     }
 
     @Override
-    public void setEchoChar(char c) {
-        super.setEchoChar(c);
-    }
-
-    @Override
-    public char getEchoChar() {
-        return super.getEchoChar();
+    public void setText(String t) {
+        isEmpty = false;
+        super.setText(t);
     }
 }

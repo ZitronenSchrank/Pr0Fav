@@ -1,3 +1,5 @@
+package Pr0Fav;
+
 import java.io.*;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -79,4 +81,3 @@ public class CSVManager {
         stringMap.clear();
     }
 }
-
