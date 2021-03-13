@@ -11,6 +11,7 @@ import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.List;
+import javax.swing.filechooser.FileSystemView;
 
 /**
  * Bietet Methoden zum arbeiten mit der Pr0-API mit Java.
@@ -30,8 +31,9 @@ public class ProApi {
     private final String PRO_ITEM_GET = PRO_URL + "/api/items/get";
     // private final String PRO_ITEM_INFO = PRO_URL + "/api/items/info?itemId=";
 
-    private final String PRO_COOKIE_PATH = System.getProperty("user.home")+File.separator+ "ProFav"+File.separator;
+    private final String PRO_COOKIE_PATH = System.getProperty("user.home")+File.separator+ ".ProFav"+File.separator;
     private final String PRO_COOKIE_FILE_NAME = PRO_COOKIE_PATH+"ProFav.cookie";
+    private final String PRO_DEFAULTPATH_FILE_NAME = PRO_COOKIE_PATH+"ProFav.txt";
 
     private CookieManager cookieManager;
     //private String userName = "";
@@ -467,6 +469,62 @@ public class ProApi {
         if(statusLabel != null){
             statusLabel.setText(message);
         }
+    }
+
+    private File readDefaultLocationFile(){
+        File f = new File(PRO_DEFAULTPATH_FILE_NAME);
+
+        if(f.isFile()){
+            try {
+                BufferedReader br = new BufferedReader(new FileReader(f));
+                String line = br.readLine();
+                br.close();
+
+                if(line != null) {
+                    File path = new File(line);
+                    if(path.isDirectory()) {
+                        return path;
+                    }
+                }
+
+                return null;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+        else {
+            return null;
+        }
+    }
+
+    private void writeToDefaultLocation(String location) {
+        try {
+
+            File f = new File(PRO_COOKIE_PATH);
+            if(!f.isDirectory()) f.mkdirs();
+
+            PrintWriter writer = new PrintWriter(new File(PRO_DEFAULTPATH_FILE_NAME), "UTF-8");
+            writer.println(location);
+            writer.flush();
+            writer.close();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public File getDefaultLocation() {
+        File path = this.readDefaultLocationFile();
+
+        if(path == null){
+            return FileSystemView.getFileSystemView().getHomeDirectory();
+        } else {
+            return path;
+        }
+    }
+
+    public void setDefaultLocation(String path) {
+        this.writeToDefaultLocation(path);
     }
 
     /**

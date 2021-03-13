@@ -142,7 +142,7 @@ public class Window extends JFrame implements ActionListener{
 
         fcSaveLoc = new JFileChooser();
         fcSaveLoc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        fcSaveLoc.setCurrentDirectory(FileSystemView.getFileSystemView().getHomeDirectory());
+        //fcSaveLoc.setCurrentDirectory(FileSystemView.getFileSystemView().getHomeDirectory());
 
         northGridPanel.add(tfName);
         northGridPanel.add(tfPassword);
@@ -184,8 +184,9 @@ public class Window extends JFrame implements ActionListener{
         mainPanel.add(southPanel, BorderLayout.SOUTH);
 
         api = new ProApi(laStatus);
-
-
+        File defaultLocation = api.getDefaultLocation();
+        tfLocation.setText(defaultLocation.getAbsolutePath());
+        fcSaveLoc.setCurrentDirectory(defaultLocation);
 
         this.setPreferredSize(new Dimension(650, 400));
         this.add(mainPanel);
@@ -266,6 +267,7 @@ public class Window extends JFrame implements ActionListener{
             fcSaveLoc.showSaveDialog(this);
             if(fcSaveLoc.getSelectedFile() != null){
                 tfLocation.setText(fcSaveLoc.getSelectedFile().getAbsolutePath());
+                api.setDefaultLocation(fcSaveLoc.getSelectedFile().getAbsolutePath());
             }
 
         }
