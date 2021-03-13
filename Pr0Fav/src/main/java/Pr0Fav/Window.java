@@ -1,22 +1,16 @@
 package Pr0Fav;
 
-import org.json.JSONObject;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.net.URL;
-import java.util.Base64;
 import java.util.Vector;
 
 public class Window extends JFrame implements ActionListener{
 
+    private static final long serialVersionUID = 1L;
     private JButton btLogin;
     private JButton btDirChoose;
     private JButton btDownload;

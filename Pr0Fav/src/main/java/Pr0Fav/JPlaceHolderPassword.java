@@ -6,6 +6,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
 public class JPlaceHolderPassword extends JPasswordField implements FocusListener {
+    private static final long serialVersionUID = 1L;
     private String placeholder;
     private boolean isEmpty = true;
     private char echoChar = '░';

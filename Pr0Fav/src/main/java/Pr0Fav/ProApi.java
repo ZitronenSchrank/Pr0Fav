@@ -5,7 +5,6 @@ import org.json.*;
 import javax.imageio.ImageIO;
 import javax.net.ssl.HttpsURLConnection;
 import javax.swing.*;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.*;
@@ -27,15 +26,15 @@ public class ProApi {
     private final String COOKIES_HEADER = "Set-Cookie";
     private final String PRO_LOGIN = PRO_URL + "/api/user/login";
     private final String PRO_USER_INFO = PRO_URL + "/api/user/info";
-    private final String PRO_LOGOUT = PRO_URL + "/api/user/logout";
+    // private final String PRO_LOGOUT = PRO_URL + "/api/user/logout";
     private final String PRO_ITEM_GET = PRO_URL + "/api/items/get";
-    private final String PRO_ITEM_INFO = PRO_URL + "/api/items/info?itemId=";
+    // private final String PRO_ITEM_INFO = PRO_URL + "/api/items/info?itemId=";
 
     private final String PRO_COOKIE_PATH = System.getProperty("user.home")+File.separator+ "ProFav"+File.separator;
     private final String PRO_COOKIE_FILE_NAME = PRO_COOKIE_PATH+"ProFav.cookie";
 
     private CookieManager cookieManager;
-    private String userName = "";
+    //private String userName = "";
     private boolean isCookieValid = false;
 
     private JLabel statusLabel;
@@ -163,7 +162,7 @@ public class ProApi {
      * @return Gibt ein LoginResult zurück, in welchem steht ob alles erfolgreich verlaufen ist.
      */
     public LoginResult login(String name, String password, String captcha, String token) {
-        userName = name;
+        //userName = name;
         String s = "";
         try {
             // Sende ein PostRequest mit Parametern in der richtigen Form
@@ -415,6 +414,7 @@ public class ProApi {
                 while ((line = br.readLine()) != null) {
                     cookies.append(line);
                 }
+                br.close();
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;

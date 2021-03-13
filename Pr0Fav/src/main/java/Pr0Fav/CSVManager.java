@@ -2,8 +2,6 @@ package Pr0Fav;
 
 import java.io.*;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Vector;
 
 public class CSVManager {
@@ -25,6 +23,7 @@ public class CSVManager {
                 int key = Integer.parseInt(line.split("([,])")[0]);
                 stringMap.put(key, line);
             }
+            br.close();
         }
 
         System.out.println(stringMap.size());

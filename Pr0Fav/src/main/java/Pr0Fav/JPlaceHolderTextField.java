@@ -6,7 +6,8 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
 public class JPlaceHolderTextField extends JTextField implements FocusListener {
-
+    
+    private static final long serialVersionUID = 1L;
     private String placeholder;
     private boolean isEmpty = true;
 
