@@ -56,7 +56,7 @@ public class DownloadThread extends Thread {
                         saveFileLocation = saveFileLocation.resolve(this.subfolders[1]);
                         break;
                     case  ProApi.NSFL:
-                        saveFileLocation = saveLocation.resolve(this.subfolders[2]);
+                        saveFileLocation = saveFileLocation.resolve(this.subfolders[2]);
                         break;
                 }
             }
