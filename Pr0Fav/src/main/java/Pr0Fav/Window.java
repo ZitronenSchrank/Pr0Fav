@@ -6,6 +6,8 @@ import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Vector;
 
 public class Window extends JFrame implements ActionListener{
@@ -39,6 +41,8 @@ public class Window extends JFrame implements ActionListener{
     private JCheckBox cbNSFW;
     private JCheckBox cbNSFL;
 
+    private JCheckBox cbDivideIntoFolders;
+
     private JFileChooser fcSaveLoc;
 
     private JPanel mainPanel;
@@ -59,8 +63,6 @@ public class Window extends JFrame implements ActionListener{
     private Vector<ProApi.ProItem> items;
 
     Window() {
-        super();
-
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setTitle("Fav Downloader");
 
@@ -129,12 +131,11 @@ public class Window extends JFrame implements ActionListener{
         tfCaptcha = new JPlaceHolderTextField();
         tfCaptcha.setPlaceholder("Captcha...");
 
-        cbSFW = new JCheckBox("SFW");
-        cbNSFW= new JCheckBox("NSFW");
-        cbNSFL= new JCheckBox("NSFL");
-        cbNSFW.setSelected(true);
-        cbSFW.setSelected(true);
-        cbNSFL.setSelected(true);
+        cbSFW = new JCheckBox("SFW", true);
+        cbNSFW= new JCheckBox("NSFW", true);
+        cbNSFL= new JCheckBox("NSFL", true);
+
+        cbDivideIntoFolders = new JCheckBox("Divide into Folders", false);
 
         taResponse = new JTextArea();
         spResponse = new JScrollPane(taResponse);
@@ -152,6 +153,7 @@ public class Window extends JFrame implements ActionListener{
         northGridPanel.add(cbSFW);
         northGridPanel.add(cbNSFW);
         northGridPanel.add(cbNSFL);
+        northGridPanel.add(cbDivideIntoFolders);
 
         northPanel.add(northGridPanel, BorderLayout.NORTH);
         northPanel.add(captchaImage, BorderLayout.CENTER);
@@ -349,8 +351,9 @@ public class Window extends JFrame implements ActionListener{
         if(new File(tfLocation.getText()).isDirectory()){
             btDownload.setEnabled(false);
             tfLocation.setEnabled(false);
+            Path locationPath = Paths.get(tfLocation.getText());
 
-            DownloadThread downloadThread = new DownloadThread(api, items, tfLocation.getText(), laStatus, btDownload);
+            DownloadThread downloadThread = new DownloadThread(api, items, locationPath, laStatus, btDownload, cbDivideIntoFolders.isSelected());
             downloadThread.start();
 
 

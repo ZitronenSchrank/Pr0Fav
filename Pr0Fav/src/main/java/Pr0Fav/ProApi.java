@@ -1,7 +1,6 @@
 package Pr0Fav;
 
 import org.json.*;
-
 import javax.imageio.ImageIO;
 import javax.net.ssl.HttpsURLConnection;
 import javax.swing.*;
@@ -9,6 +8,8 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.List;
 import javax.swing.filechooser.FileSystemView;
@@ -19,7 +20,7 @@ import javax.swing.filechooser.FileSystemView;
 public class ProApi {
 
     public static final String PRO_URL = "https://pr0gramm.com";
-    public static final int SFW = 9;
+    public static final int SFW = 1;
     public static final int NSFL = 4;
     public static final int NSFW = 2;
     public static final int ALL = SFW + NSFL + NSFW;
@@ -214,15 +215,15 @@ public class ProApi {
      * @param saveLocation Der Ort wo es gespeichert werden soll
      * @return True falls Download erfolgreich, false bei Fehler/Exceptions
      */
-    public boolean downloadItem(ProItem item, String saveLocation) {
+    public boolean downloadItem(ProItem item, Path saveLocation) {
         try {
             System.out.println("Downloading: " + item.getUrlToFile());
             // Trenne item.getImage() beim ersten Punkt (Zum Erhalten des Typs)
             String ext = item.getImage().split("([.])")[1];
-            File newFile = new File(saveLocation + "/" + item.getId() + "." + ext);
+            Path newFilePath = saveLocation.resolve(item.getId() + "." + ext);
 
             // Falls Datei schon vorhanden lade sie nicht nochmal runter
-            if (!newFile.isFile()) {
+            if (!Files.exists(newFilePath)) {
 
                 // Lade die Datei runter
                 URL url = new URL(item.getUrlToFile());
@@ -238,9 +239,7 @@ public class ProApi {
                 byte[] response = out.toByteArray();
 
                 // Erstelle eine neue Datei auf der Festplatte und schrieb den Inhalt rein.
-                FileOutputStream fos = new FileOutputStream(newFile);
-                fos.write(response);
-                fos.close();
+                Files.write(newFilePath, response);
                 return true;
             }
             // False falls Datei bereits vorhanden

@@ -9,7 +9,7 @@ public class JPlaceHolderPassword extends JPasswordField implements FocusListene
     private static final long serialVersionUID = 1L;
     private String placeholder;
     private boolean isEmpty = true;
-    private char echoChar = '░';
+    private char echoChar = '*';
 
     JPlaceHolderPassword() {
         super.addFocusListener(this);
